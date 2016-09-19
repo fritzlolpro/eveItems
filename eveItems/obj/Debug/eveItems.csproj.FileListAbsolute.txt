@@ -1,0 +1,11 @@
+D:\up\eveItems\eveItems\bin\Debug\eveItems.exe.config
+D:\up\eveItems\eveItems\bin\Debug\eveItems.exe
+D:\up\eveItems\eveItems\bin\Debug\eveItems.pdb
+D:\up\eveItems\eveItems\obj\Debug\eveItems.csprojResolveAssemblyReference.cache
+D:\up\eveItems\eveItems\obj\Debug\eveItems.exe
+D:\up\eveItems\eveItems\obj\Debug\eveItems.pdb
+D:\up\eveItems\eveItems\bin\Debug\Newtonsoft.Json.dll
+D:\up\eveItems\eveItems\bin\Debug\YamlDotNet.dll
+D:\up\eveItems\eveItems\bin\Debug\Newtonsoft.Json.xml
+D:\up\eveItems\eveItems\bin\Debug\YamlDotNet.pdb
+D:\up\eveItems\eveItems\bin\Debug\YamlDotNet.xml
