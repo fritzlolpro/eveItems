@@ -15,5 +15,6 @@ namespace EveCentral
     {
         public OrderData buy { get; set; }
         public OrderData sell { get; set; }
+        public OrderData volume { get; set; }
     }
 }

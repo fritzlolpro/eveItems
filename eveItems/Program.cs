@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using CsvHelper;
+using Newtonsoft.Json;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,6 +21,7 @@ namespace eveItems
         private static int requestCount = 0;
 
         private const int requestsPerSecond = 10;
+        public static TextWriter textWriter;
 
         static void Main(string[] args)
         {
@@ -29,65 +32,68 @@ namespace eveItems
         {
             int counter = 10;
 
+            textWriter = File.CreateText("fedor.txt");
+            var csv = new CsvWriter(textWriter);
             using (var input = new StreamReader(path))
             {
                 var deserializer = new Deserializer(namingConvention: new CamelCaseNamingConvention(), ignoreUnmatched: true);
 
-                Dictionary<int, InvType> types = await Task.Run( () => deserializer.Deserialize<Dictionary<int, InvType>>(input) );
-
+                Dictionary<int, InvType> types = await Task.Run(() => deserializer.Deserialize<Dictionary<int, InvType>>(input));
+               
                 foreach (var elem in types)
                 {
 
                     if (counter < 0)
                     {
-                        //break;
+                        break;
                         await Task.Delay(1000);
                         counter = 10;
                     }
-                        int typeId = elem.Key;
-                        string name = elem.Value.name.en;
+                    int typeId = elem.Key;
+                    string name = elem.Value.name.en;
 
-                        var data = GetMarketData(typeId).Result;
-                        Console.WriteLine("{0},{1},{2},{3},{4},{5}", typeId, name, data.sell.fivePercent, data.sell.volume, data.buy.fivePercent, data.buy.volume);
-                    
+                    var data = GetMarketData(typeId).Result;
+                    //Console.WriteLine("{0},{1},{2},{3},{4},{5}", typeId, name, data.sell.fivePercent, data.sell.volume, data.buy.fivePercent, data.buy.volume);
+
+                    var stringToWrite = string.Format("{0},{1},{2},{3},{4},{5}", typeId, name, data.sell.fivePercent, data.sell.volume, data.buy.fivePercent, data.buy.volume);
+                    csv.WriteRecord(stringToWrite);
+
                     counter--;
+
                 }
 
-            }
 
-            /*
-            Console.WriteLine("sel: {0}, volume: {1}", data.sell.fivePercent, data.sell.volume);
-            Console.WriteLine("buy: {0}, volume: {1}", data.buy.fivePercent, data.buy.volume);
-            */
+            
+
         }
 
-        private static void writeCsvFile(string data)
+       
+     }
+
+
+
+    async private static Task<EveCentral.MarketType> GetMarketData(int typeId)
+    {
+        using (var httpClient = new HttpClient())
         {
-
+            var stringData = await httpClient.GetStringAsync(EveCentralURL + typeId);
+            return JsonConvert.DeserializeObject<List<EveCentral.MarketType>>(stringData)[0];
         }
-
-        async private static Task<EveCentral.MarketType> GetMarketData(int typeId)
-        {
-            using (var httpClient = new HttpClient())
-            {
-                var stringData = await httpClient.GetStringAsync(EveCentralURL + typeId);
-                return JsonConvert.DeserializeObject<List<EveCentral.MarketType>>(stringData)[0];
-            }
-        }
+    }
 
 
-        async private static Task<T> GetJsonFromWebLimited<T>(string url, Func<Task<T>> action)
-        {
-            if (DateTime.Now - lastTimeFrame > TimeSpan.FromSeconds(1))
-            {
-                requestCount = 0;
-                lastTimeFrame = DateTime.Now;
-            }
-            if (requestCount > requestsPerSecond)
-            {
-                await Task.Delay(1000);
-            }
-            return await action();
-        }
+        //async private static Task<T> GetJsonFromWebLimited<T>(string url, Func<Task<T>> action)
+        //{
+        //    if (DateTime.Now - lastTimeFrame > TimeSpan.FromSeconds(1))
+        //    {
+        //        requestCount = 0;
+        //        lastTimeFrame = DateTime.Now;
+        //    }
+        //    if (requestCount > requestsPerSecond)
+        //    {
+        //        await Task.Delay(1000);
+        //    }
+        //    return await action();
+        //}
     }
 }

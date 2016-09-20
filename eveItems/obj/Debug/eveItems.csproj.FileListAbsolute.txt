@@ -9,3 +9,5 @@ D:\up\eveItems\eveItems\bin\Debug\YamlDotNet.dll
 D:\up\eveItems\eveItems\bin\Debug\Newtonsoft.Json.xml
 D:\up\eveItems\eveItems\bin\Debug\YamlDotNet.pdb
 D:\up\eveItems\eveItems\bin\Debug\YamlDotNet.xml
+D:\up\eveItems\eveItems\bin\Debug\CsvHelper.dll
+D:\up\eveItems\eveItems\bin\Debug\CsvHelper.xml
